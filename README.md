@@ -1,68 +1,39 @@
-# rag-doc-assistant
+# RAG Doc Assistant — Contentstack Personalize
 
-> A RAG pipeline built over Contentstack documentation — testing what makes documentation LLM-friendly vs AI-inhibited.
+A Retrieval-Augmented Generation (RAG) assistant built over Contentstack Personalize documentation.
 
-## What this is
+## What it does
 
-Most RAG pipelines fail not because of the model — but because the documentation going in is AI-inhibited.
-
-This project builds a retrieval-augmented generation (RAG) pipeline over real enterprise documentation (Contentstack) to answer two questions:
-
-1. What makes documentation machine-readable vs AI-inhibited?
-2. How do you architect docs so an LLM can retrieve and use them accurately?
+- Chunks and embeds Contentstack Personalize docs into a ChromaDB vector store
+- Uses semantic search to retrieve relevant context for any question
+- Passes retrieved context to Llama 3.3 (via Groq) to generate grounded answers
+- Refuses to hallucinate — if the answer isn't in the docs, it says so
 
 ## Stack
 
-| Tool | Purpose |
-|------|---------|
-| LangChain | Orchestration and retrieval chain |
-| ChromaDB | Vector store for doc embeddings |
-| OpenAI / HuggingFace | Embeddings and LLM |
-| Python | Core language |
-| Contentstack Docs | Source documentation corpus |
+| Layer | Tool |
+|---|---|
+| Embeddings | ChromaDB default (all-MiniLM-L6-v2 via ONNX) |
+| Vector Store | ChromaDB (in-memory) |
+| LLM | Llama 3.3 70B via Groq API |
+| UI | Gradio ChatInterface |
+| Hosting | Hugging Face Spaces |
 
-## Project structure
+## Run locally
 
-```
-rag-doc-assistant/
-├── data/               # Raw and processed documentation chunks
-├── embeddings/         # Vector store (ChromaDB)
-├── pipeline/           # LangChain RAG chain setup
-│   ├── ingest.py       # Load and chunk docs
-│   ├── embed.py        # Generate and store embeddings
-│   └── query.py        # Query the RAG pipeline
-├── evaluation/         # Doc quality scoring experiments
-├── notebooks/          # Experiments and findings
-└── README.md
+```bash
+pip install chromadb groq gradio
+export GROQ_API_KEY=your_key_here
+python app.py
 ```
 
-## The hypothesis
+## Files
 
-Documentation written for humans is often terrible for AI. Specifically:
+- `app.py` — main application (Gradio + RAG pipeline)
+- `rag_personalize_v3.ipynb` — Colab notebook (development version)
+- `requirements.txt` — dependencies
 
-- **Implicit context** — writers assume the reader knows the product. LLMs don't.
-- **Inconsistent structure** — headings, chunking boundaries, and terminology vary wildly.
-- **Cross-reference dependencies** — "see above" and "as mentioned earlier" break retrieval entirely.
-- **Passive voice and nominalizations** — reduce semantic clarity for embeddings.
+## Built by
 
-This project tests these hypotheses against real retrieval quality metrics.
-
-## Status
-
-- [x] Repo initialized
-- [ ] Doc ingestion pipeline (Week 2)
-- [ ] ChromaDB vector store setup (Week 2)
-- [ ] RAG query pipeline (Week 2)
-- [ ] Doc quality scoring framework (Week 3)
-- [ ] Findings writeup + LinkedIn post (Week 3)
-
-## Why this matters
-
-If you're building AI products on top of documentation — support bots, internal knowledge bases, product copilots — the quality of your documentation architecture directly determines the quality of your AI outputs.
-
-This is not an ML problem. It's a documentation problem.
-
-## Author
-
-**Azariah Onyx** — Information Architect → Gen AI  
-[LinkedIn](https://linkedin.com/in/onyx-aj) · [GitHub](https://github.com/AzariahOnyx)
+Azariah Onyx — Information Architect transitioning to Gen AI.  
+[LinkedIn](https://linkedin.com/in/onyx-aj)
