@@ -1,20 +1,29 @@
-# RAG Doc Assistant — Contentstack Personalize
+# RAG Doc Assistant
 
-A Retrieval-Augmented Generation (RAG) assistant built over Contentstack Personalize documentation.
+A RAG pipeline built over API documentation — testing how documentation structure affects AI retrieval quality.
+
+## Live Demo
+
+Try it now: [huggingface.co/spaces/Onyx-aj/rag-doc-assistant](https://huggingface.co/spaces/Onyx-aj/rag-doc-assistant)
 
 ## What it does
 
-- Chunks and embeds Contentstack Personalize docs into a ChromaDB vector store
+- Chunks and embeds API documentation into a vector store
 - Uses semantic search to retrieve relevant context for any question
 - Passes retrieved context to Llama 3.3 (via Groq) to generate grounded answers
-- Refuses to hallucinate — if the answer isn't in the docs, it says so
+- Refuses to hallucinate — if the answer is not in the docs, it says so
+
+## The core insight
+
+Poorly structured documentation degrades RAG output quality. This project tests that thesis directly — the same model, same retrieval logic, different doc structure = different answers.
+
+Docs written for humans to scan are not the same as docs written for machines to retrieve.
 
 ## Stack
 
 | Layer | Tool |
 |---|---|
-| Embeddings | ChromaDB default (all-MiniLM-L6-v2 via ONNX) |
-| Vector Store | ChromaDB (in-memory) |
+| Retrieval | Keyword search (query-optimized chunks) |
 | LLM | Llama 3.3 70B via Groq API |
 | UI | Gradio ChatInterface |
 | Hosting | Hugging Face Spaces |
@@ -22,18 +31,13 @@ A Retrieval-Augmented Generation (RAG) assistant built over Contentstack Persona
 ## Run locally
 
 ```bash
-pip install chromadb groq gradio
+pip install groq gradio
 export GROQ_API_KEY=your_key_here
 python app.py
 ```
 
-## Files
-
-- `app.py` — main application (Gradio + RAG pipeline)
-- `rag_personalize_v3.ipynb` — Colab notebook (development version)
-- `requirements.txt` — dependencies
-
 ## Built by
 
-Azariah Onyx — Information Architect transitioning to Gen AI.  
-[LinkedIn](https://linkedin.com/in/onyx-aj)
+Azariah Onyx — Information Architect transitioning to Gen AI.
+[LinkedIn](https://linkedin.com/in/onyx-aj) | [Portfolio](https://azariahonyx.github.io)
+
